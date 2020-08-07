@@ -1,35 +1,59 @@
 import React from 'react';
+import api from '../../services/api';
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
 import './styles.css';
 
-function TeacherItem() {
+
+export interface Teacher {
+    id: number;
+    avatar: string;
+    bio: string;
+    cost: number;
+    name: string;
+    subject: string;
+    whatsapp: string;
+}
+
+interface TeacherItemProps {
+    teacher: Teacher;
+}
+
+const TeacherItem : React.FC<TeacherItemProps> = ({ teacher }) => {
+    function createNewConnection() {
+        api.post('connections', {
+            user_id: teacher.id,
+        })
+    }
+
     return (
         <article className="teacher-item">
         <header>
-            <img src="https://avatars0.githubusercontent.com/u/42654434?s=400&u=18d4c668a2e0767e1e1ea1f2aff1b88301b25362&v=4" alt="Luan Miano"></img>
+            <img src={teacher.avatar} alt={teacher.name}></img>
             <div>
-                <strong>Luan Miano</strong>
-                <span>Química</span>
+                <strong>{teacher.name}</strong>
+                <span>{teacher.subject}</span>
             </div>
         </header>
         <p>
-        A nível organizacional, a mobilidade dos capitais internacionais facilita a criação das novas proposições.
-        <br/><br/>
-        Do mesmo modo, a necessidade de renovação processual aponta para a melhoria das formas de ação.
+        {teacher.bio}
         </p>
 
         <footer>
             <p>
                 Preço/hora
-                <strong>R$ 5,00</strong>
+                <strong>{teacher.cost}</strong>
             </p>
                 
-            <button type="button">
+            <a 
+            target="_blank" 
+            onClick={createNewConnection} 
+            href={`https://wa.me/${teacher.whatsapp}?text=Vamos Estudar?`}>
+                
                 <img src={whatsappIcon} alt="Whatsapp" />
                 Entrar em contato
-            </button>
+            </a>
             
         </footer>
         </article>
